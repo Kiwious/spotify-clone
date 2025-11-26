@@ -68,7 +68,7 @@ const TrackPlayer: FC = () => {
             </div>
           </div>
 
-          <div className="flex items-center space-x-4 w-full">
+          <div className="flex items-center w-full space-x-4">
             <div>
               {isPlaying ? (
                 <IconButton icon={<Pause />} onClick={stopPlayback} />
@@ -76,7 +76,7 @@ const TrackPlayer: FC = () => {
                 <IconButton icon={<Play />} onClick={startPlayback} />
               )}
             </div>
-            <div className="font-light opacity-20">
+            <div className="font-light opacity-20 w-8">
               {secondsToDurationString(currentTime)}
             </div>
             <Progress
@@ -84,7 +84,7 @@ const TrackPlayer: FC = () => {
               value={progress}
               className="cursor-pointer"
             />
-            <div className="font-light opacity-20">
+            <div className="font-light opacity-20 w-8">
               {playingTrack?.track_metadata?.duration_string}
             </div>
           </div>
