@@ -1,18 +1,21 @@
-import { FC } from "react";
+import { FC, MouseEvent } from "react";
 import { Card, CardContent } from "./ui/card";
 import { useTrack } from "@/context/TrackContext";
 import Image from "next/image";
 import { Skeleton } from "./ui/skeleton";
 import { Progress } from "./ui/progress";
-import { Heart, ListPlus } from "lucide-react";
+import { Heart, ListPlus, Pause, Play } from "lucide-react";
 import IconButton from "./Button/IconButton";
 
-interface Props {
-  progress: number;
-}
-
-const TrackPlayer: FC<Props> = ({ progress }) => {
-  const { playingTrack } = useTrack();
+const TrackPlayer: FC = () => {
+  const {
+    playingTrack,
+    isPlaying,
+    setIsPlaying,
+    seekTo,
+    progress,
+    currentTime,
+  } = useTrack();
 
   const secondsToDurationString = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
@@ -29,6 +32,17 @@ const TrackPlayer: FC<Props> = ({ progress }) => {
     console.log("Add to Playlist");
   };
 
+  const handlePausePlayClick = () => {
+    setIsPlaying(!isPlaying);
+  };
+
+  const handleSeek = (e: MouseEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const clickX = e.clientX - rect.left;
+    const percentage = (clickX / rect.width) * 100;
+    seekTo(percentage);
+  };
+
   return (
     <Card className="absolute bottom-4 left-4 right-4">
       <CardContent>
@@ -42,8 +56,9 @@ const TrackPlayer: FC<Props> = ({ progress }) => {
               width={70}
             />
           ) : (
-            <Skeleton className={`size-[70px]`} />
+            <Skeleton className="size-[70px] shrink-0" />
           )}
+
           <div className="flex flex-col">
             <div className="font-medium">
               {playingTrack?.track_metadata?.title}
@@ -52,16 +67,28 @@ const TrackPlayer: FC<Props> = ({ progress }) => {
               {playingTrack?.track_metadata?.channel}
             </div>
           </div>
+
           <div className="flex items-center space-x-4 w-full">
-            <div className="font-light opacity-20">
-              {secondsToDurationString(progress)}
+            <div>
+              {isPlaying ? (
+                <IconButton icon={<Pause />} onClick={handlePausePlayClick} />
+              ) : (
+                <IconButton icon={<Play />} onClick={handlePausePlayClick} />
+              )}
             </div>
-            <Progress value={progress} />
+            <div className="font-light opacity-20">
+              {secondsToDurationString(currentTime)}
+            </div>
+            <Progress
+              onClick={handleSeek}
+              value={progress}
+              className="cursor-pointer"
+            />
             <div className="font-light opacity-20">
               {playingTrack?.track_metadata?.duration_string}
             </div>
           </div>
-          <div className="flex space-x-6 opacity-50 ml-12 mr-4">
+          <div className="flex space-x-6 ml-12 mr-4">
             <IconButton onClick={handleLikeClick} icon={<Heart />} />
             <IconButton
               onClick={handleAddToPlaylistClick}

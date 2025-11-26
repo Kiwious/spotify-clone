@@ -12,7 +12,13 @@ interface Props extends ComponentPropsWithoutRef<"div"> {
 
 const IconButton: FC<Props> = ({ icon, ...props }) => {
   return (
-    <div className={cn("cursor-pointer", props.className)} {...props}>
+    <div
+      className={cn(
+        "cursor-pointer opacity-50 hover:opacity-20 transition-opacity",
+        props.className
+      )}
+      {...props}
+    >
       {cloneElement(
         icon as React.DetailedReactHTMLElement<
           React.HTMLAttributes<HTMLElement>,

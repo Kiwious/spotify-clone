@@ -11,7 +11,6 @@ import { HashLoader } from "react-spinners";
 
 const Page = () => {
   const [url, setUrl] = useState("");
-  const [progress, setProgress] = useState(0);
   const { data, isLoading, isSuccess } = useGetTrack(url);
   const track = data?.track_metadata;
 
@@ -47,8 +46,8 @@ const Page = () => {
       ) : (
         data && (
           <>
-            <Audio track={data} />
-            <TrackPlayer progress={progress} />
+            <Audio track={data}  />
+            <TrackPlayer  />
           </>
         )
       )}
