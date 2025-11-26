@@ -11,7 +11,6 @@ const Audio: FC<Props> = ({ track }) => {
   const {
     playingTrack,
     setPlayingTrack,
-    isPlaying,
     setIsPlaying,
     ref,
     setCurrentTime,
@@ -21,15 +20,6 @@ const Audio: FC<Props> = ({ track }) => {
   useEffect(() => {
     setPlayingTrack(track);
   }, [setPlayingTrack, track]);
-
-  useEffect(() => {
-    if (!ref?.current) return;
-    if (isPlaying) {
-      ref?.current?.play();
-    } else {
-      ref?.current?.pause();
-    }
-  }, [isPlaying]);
 
   const handleTrackEnded = () => {
     setPlayingTrack(null);
@@ -44,6 +34,14 @@ const Audio: FC<Props> = ({ track }) => {
     setCurrentTime(currentTime);
   };
 
+  const handlePlay = () => {
+    setIsPlaying(true);
+  };
+
+  const handlePause = () => {
+    setIsPlaying(false);
+  };
+
   return (
     <audio
       controls
@@ -51,6 +49,10 @@ const Audio: FC<Props> = ({ track }) => {
       ref={ref}
       onEnded={handleTrackEnded}
       onTimeUpdate={handleTimeUpdate}
+      onPlay={handlePlay}
+      onPause={handlePause}
+      muted
+      autoPlay
     >
       {/* <source src={url} type="audio/mpeg"/> */}
       Your browser does not support the audio element.

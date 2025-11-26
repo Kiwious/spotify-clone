@@ -8,14 +8,8 @@ import { Heart, ListPlus, Pause, Play } from "lucide-react";
 import IconButton from "./Button/IconButton";
 
 const TrackPlayer: FC = () => {
-  const {
-    playingTrack,
-    isPlaying,
-    setIsPlaying,
-    seekTo,
-    progress,
-    currentTime,
-  } = useTrack();
+  const { playingTrack, isPlaying, seekTo, progress, currentTime, ref } =
+    useTrack();
 
   const secondsToDurationString = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
@@ -32,8 +26,14 @@ const TrackPlayer: FC = () => {
     console.log("Add to Playlist");
   };
 
-  const handlePausePlayClick = () => {
-    setIsPlaying(!isPlaying);
+  const startPlayback = () => {
+    if (!ref?.current) return;
+    ref?.current?.play();
+  };
+
+  const stopPlayback = () => {
+    if (!ref?.current) return;
+    ref?.current?.pause();
   };
 
   const handleSeek = (e: MouseEvent<HTMLDivElement>) => {
@@ -71,9 +71,9 @@ const TrackPlayer: FC = () => {
           <div className="flex items-center space-x-4 w-full">
             <div>
               {isPlaying ? (
-                <IconButton icon={<Pause />} onClick={handlePausePlayClick} />
+                <IconButton icon={<Pause />} onClick={stopPlayback} />
               ) : (
-                <IconButton icon={<Play />} onClick={handlePausePlayClick} />
+                <IconButton icon={<Play />} onClick={startPlayback} />
               )}
             </div>
             <div className="font-light opacity-20">
