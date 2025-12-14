@@ -1,17 +1,17 @@
 "use client";
 
 import Audio from "@/components/Audio";
-import UrlForm from "@/components/form/UrlForm";
+import UrlForm from "@/components/Form/UrlForm";
 import TrackPlayer from "@/components/TrackPlayer";
-import { Skeleton } from "@/components/ui/skeleton";
+import { Item, ItemContent, ItemMedia } from "@/components/ui/item";
+import { Spinner } from "@/components/ui/spinner";
 import useGetTrack from "@/hooks/query/useGetTrack";
-import Image from "next/image";
 import { useState } from "react";
-import { HashLoader } from "react-spinners";
 
 const Page = () => {
   const [url, setUrl] = useState("");
-  const { data, isLoading, isSuccess } = useGetTrack(url);
+  const { data, isLoading } = useGetTrack(url);
+  
   const track = data?.track_metadata;
 
   return (
@@ -19,38 +19,19 @@ const Page = () => {
       <div className="absolute top-0 px-48 pt-12 w-full">
         <UrlForm setUrl={setUrl} />
       </div>
-      {isLoading || !isSuccess ? (
-        <Skeleton className="w-1/2 h-1/2" />
-      ) : (
-        <div className="flex space-x-4">
-          {track?.thumbnail ? (
-            <Image
-              className="rounded-sm"
-              src={track.thumbnail}
-              alt="Thumbnail"
-              width={250}
-              height={250}
-            />
-          ) : (
-            <Skeleton className="size-[100px]" />
-          )}
-          <div>
-            <div className="text-5xl">{track?.title}</div>
-            <p className="text-gray-300">{track?.duration_string}</p>
-          </div>
-        </div>
+      {isLoading && (
+        <Item variant="outline">
+          <ItemMedia>
+            <Spinner />
+          </ItemMedia>
+          <ItemContent>
+            Das angeforderte Lied wird heruntergeladen. Dies kann einigie
+            Minuten in Anspruch nehmen.
+          </ItemContent>
+        </Item>
       )}
-
-      {isLoading ? (
-        <HashLoader color="#fff" />
-      ) : (
-        data && (
-          <>
-            <Audio track={data}  />
-            <TrackPlayer  />
-          </>
-        )
-      )}
+      {track && <Audio track={data} />}
+      <TrackPlayer />
     </div>
   );
 };

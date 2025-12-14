@@ -1,15 +1,18 @@
-import { FC, MouseEvent } from "react";
+import { FC, MouseEvent, useState } from "react";
 import { Card, CardContent } from "./ui/card";
 import { useTrack } from "@/context/TrackContext";
 import Image from "next/image";
 import { Skeleton } from "./ui/skeleton";
 import { Progress } from "./ui/progress";
-import { Heart, ListPlus, Pause, Play } from "lucide-react";
+import { HeartPlus, Pause, Play } from "lucide-react";
 import IconButton from "./Button/IconButton";
+import LikeTrackModal from "./Modal/LikeTrackModal";
 
 const TrackPlayer: FC = () => {
   const { playingTrack, isPlaying, seekTo, progress, currentTime, ref } =
     useTrack();
+
+  const [modalIsOpen, setModalIsOpen] = useState(false);
 
   const secondsToDurationString = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
@@ -19,11 +22,8 @@ const TrackPlayer: FC = () => {
   };
 
   const handleLikeClick = () => {
+    // setModalIsOpen(true);
     console.log("Like");
-  };
-
-  const handleAddToPlaylistClick = () => {
-    console.log("Add to Playlist");
   };
 
   const startPlayback = () => {
@@ -85,16 +85,19 @@ const TrackPlayer: FC = () => {
               className="cursor-pointer"
             />
             <div className="font-light opacity-20 w-8">
-              {playingTrack?.track_metadata?.duration_string}
+              {playingTrack?.track_metadata?.duration_string ?? "0:00"}
             </div>
           </div>
-          <div className="flex space-x-6 ml-12 mr-4">
-            <IconButton onClick={handleLikeClick} icon={<Heart />} />
-            <IconButton
-              onClick={handleAddToPlaylistClick}
-              icon={<ListPlus />}
-            />
-          </div>
+          {playingTrack && (
+            <div className="flex space-x-6 mr-4">
+              <LikeTrackModal
+                track={playingTrack}
+                trigger={
+                  <IconButton onClick={handleLikeClick} icon={<HeartPlus />} />
+                }
+              />
+            </div>
+          )}
         </div>
       </CardContent>
     </Card>

@@ -1,6 +1,6 @@
 import { Dispatch, FC, SetStateAction } from "react";
 import { FormProvider, useForm } from "react-hook-form";
-import { Input } from "../ui/input";
+import Input from "./Input/Input";
 
 interface FormValues {
   url: string;
@@ -26,15 +26,15 @@ const UrlForm: FC<Props> = ({ setUrl }) => {
     <FormProvider {...form}>
       <form
         onSubmit={(e) => {
-          e.preventDefault(); // your override
-          e.stopPropagation(); // your override
+          e.preventDefault();
+          e.stopPropagation();
           form.handleSubmit((values) => handleSubmit(values))(e);
         }}
       >
         <Input
           className="w-full"
           placeholder="YouTube-URL eingeben..."
-          {...form.register("url")}
+          name="url"
         />
       </form>
     </FormProvider>

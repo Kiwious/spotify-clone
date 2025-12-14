@@ -24,6 +24,8 @@ const Audio: FC<Props> = ({ track }) => {
   const handleTrackEnded = () => {
     setPlayingTrack(null);
     setIsPlaying(false);
+    setCurrentTime(0);
+    setProgress(0);
   };
 
   const handleTimeUpdate = () => {
@@ -51,7 +53,6 @@ const Audio: FC<Props> = ({ track }) => {
       onTimeUpdate={handleTimeUpdate}
       onPlay={handlePlay}
       onPause={handlePause}
-      muted
       autoPlay
     >
       {/* <source src={url} type="audio/mpeg"/> */}
